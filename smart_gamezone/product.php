@@ -4,7 +4,8 @@ require_once __DIR__ . '/includes/db.php';
 
 $basePrefix = str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/weeks/') ? '../' : '';
 $productId = (int) ($_GET['id'] ?? 0);
-$stmt = $pdo->prepare('SELECT id, name, price, description, image_url FROM products WHERE id = :id');
+$selectColumns = getProductSelectColumns($pdo);
+$stmt = $pdo->prepare("SELECT $selectColumns FROM products WHERE id = :id");
 $stmt->execute([':id' => $productId]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 

@@ -11,3 +11,20 @@ $pdo = new PDO($dsn, $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
+
+function getProductSelectColumns(PDO $pdo): string {
+    static $columns = null;
+
+    if ($columns !== null) {
+        return $columns;
+    }
+
+    try {
+        $pdo->query('SELECT image_url FROM products LIMIT 1');
+        $columns = 'id, name, price, description, image_url';
+    } catch (PDOException $e) {
+        $columns = 'id, name, price, description';
+    }
+
+    return $columns;
+}

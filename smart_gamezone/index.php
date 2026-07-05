@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/includes/db.php';
 
 $basePrefix = str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/weeks/') ? '../' : '';
-$products = $pdo->query('SELECT id, name, price, description, image_url FROM products ORDER BY id LIMIT 4')->fetchAll(PDO::FETCH_ASSOC);
+$selectColumns = getProductSelectColumns($pdo);
+$products = $pdo->query("SELECT $selectColumns FROM products ORDER BY id LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
 
 $imageMap = [
     1 => 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=900&q=80',

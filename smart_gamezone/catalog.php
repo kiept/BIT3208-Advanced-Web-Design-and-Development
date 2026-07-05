@@ -4,7 +4,8 @@ require_once __DIR__ . '/includes/db.php';
 
 $pageTitle = 'Catalog';
 $search = trim($_GET['search'] ?? '');
-$sql = 'SELECT id, name, price, description, image_url FROM products WHERE 1';
+$selectColumns = getProductSelectColumns($pdo);
+$sql = "SELECT $selectColumns FROM products WHERE 1";
 $params = [];
 if ($search !== '') {
     $sql .= ' AND (name LIKE :search OR description LIKE :search)';
@@ -41,18 +42,19 @@ include __DIR__ . '/includes/header.php';
         <?php else: ?>
             <div class="grid">
                 <?php foreach ($products as $product): ?>
-                    <?php $imagePath = $product['image_url'] ?: ($imageMap[(int) $product['id']] ?? ''); ?>
-                <article class="card product-card">
-                    <?php if ($imagePath !== ''): ?>
-                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
-                    <?php endif; ?>
-                    <h3><?= htmlspecialchars($product['name']) ?></h3>
-                    <p><?= htmlspecialchars($product['description']) ?></p>
-                    <p><strong>KSh <?= htmlspecialchars($product['price']) ?></strong></p>
-                    <p><a class="button" href="product.php?id=<?= (int) $product['id'] ?>">View product</a></p>
-                </article>
-            <?php endforeach; ?>
-        </div>
+                    <?php $imagePath = $product['image_url'] ?? ($imageMap[(int) $product['id']] ?? ''); ?>
+                    <article class="card product-card">
+                        <?php if ($imagePath !== ''): ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
+                        <?php endif; ?>
+                        <h3><?= htmlspecialchars($product['name']) ?></h3>
+                        <p><?= htmlspecialchars($product['description']) ?></p>
+                        <p><strong>KSh <?= htmlspecialchars($product['price']) ?></strong></p>
+                        <p><a class="button" href="product.php?id=<?= (int) $product['id'] ?>">View product</a></p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </section>
 </main>
 
