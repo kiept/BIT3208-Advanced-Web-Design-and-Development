@@ -9,13 +9,56 @@ if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
     exit;
 }
 
+ $message = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $address = trim($_POST['address'] ?? '');
 
-    if ($name !== '' && $email !== '' && $address !== '') {
+    if ($name === '' || $email === '' || $address === '') {
+        $message = 'Please complete all checkout fields.';
+    } else {
+        $ids = array_keys($_SESSION['cart']);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $pdo->prepare('SELECT id, price FROM products WHERE id IN (' . $placeholders . ')');
+        $stmt->execute($ids);
+        $orderProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($orderProducts)) {
+            header('Location: cart.php');
+            exit;
+        }
+
+        $total = 0;
+        foreach ($orderProducts as $productItem) {
+            $quantity = $_SESSION['cart'][(int) $productItem['id']] ?? 1;
+            $total += (float) $productItem['price'] * $quantity;
+        }
+
+        $stmt = $pdo->prepare('INSERT INTO orders (user_id, customer_name, customer_email, shipping_address, total) VALUES (:user_id, :name, :email, :address, :total)');
+        $stmt->execute([
+            ':user_id' => $_SESSION['user_id'] ?? null,
+            ':name' => $name,
+            ':email' => $email,
+            ':address' => $address,
+            ':total' => $total,
+        ]);
+
+        $orderId = $pdo->lastInsertId();
+        $insertItem = $pdo->prepare('INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (:order_id, :product_id, :quantity, :unit_price)');
+        foreach ($orderProducts as $productItem) {
+            $quantity = $_SESSION['cart'][(int) $productItem['id']] ?? 1;
+            $insertItem->execute([
+                ':order_id' => $orderId,
+                ':product_id' => $productItem['id'],
+                ':quantity' => $quantity,
+                ':unit_price' => $productItem['price'],
+            ]);
+        }
+
         $_SESSION['order_message'] = 'Order placed successfully. Thank you for shopping at Smart GameZone.';
+        $_SESSION['order_number'] = $orderId;
         unset($_SESSION['cart']);
         header('Location: confirmation.php');
         exit;
