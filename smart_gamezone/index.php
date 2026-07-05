@@ -28,7 +28,7 @@ $imageMap = [
         <div class="grid">
             <?php foreach ($products as $product): ?>
                 <article class="card product-card">
-                    <?php $imagePath = $product['image_url'] ?: ($imageMap[(int) $product['id']] ?? ''); ?>
+                    <?php $imagePath = $product['image_url'] ?? ($imageMap[(int) $product['id']] ?? ''); ?>
                     <?php if ($imagePath !== ''): ?>
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
                     <?php endif; ?>
