@@ -3,7 +3,17 @@ session_start();
 require_once __DIR__ . '/includes/db.php';
 
 $pageTitle = 'Catalog';
-$products = $pdo->query('SELECT id, name, price, description FROM products ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
+$search = trim($_GET['search'] ?? '');
+$sql = 'SELECT id, name, price, description, image_url FROM products WHERE 1';
+$params = [];
+if ($search !== '') {
+    $sql .= ' AND (name LIKE :search OR description LIKE :search)';
+    $params[':search'] = '%' . $search . '%';
+}
+$sql .= ' ORDER BY id';
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $imageMap = [
     1 => 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=900&q=80',
@@ -19,9 +29,19 @@ include __DIR__ . '/includes/header.php';
     <section class="card">
         <h1>Gaming products</h1>
         <p>Browse the latest gaming hardware and accessories for your setup.</p>
-        <div class="grid">
-            <?php foreach ($products as $product): ?>
-                <?php $imagePath = $imageMap[(int) $product['id']] ?? ''; ?>
+        <form method="get" class="form-grid search-form">
+            <label>
+                Search products
+                <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search by name or description">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+        <?php if (empty($products)): ?>
+            <p>No products match your search. Try another keyword.</p>
+        <?php else: ?>
+            <div class="grid">
+                <?php foreach ($products as $product): ?>
+                    <?php $imagePath = $product['image_url'] ?: ($imageMap[(int) $product['id']] ?? ''); ?>
                 <article class="card product-card">
                     <?php if ($imagePath !== ''): ?>
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">

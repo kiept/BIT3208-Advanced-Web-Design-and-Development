@@ -1,8 +1,9 @@
 <?php
+session_start();
 require_once __DIR__ . '/includes/db.php';
 
 $basePrefix = str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/weeks/') ? '../' : '';
-$products = $pdo->query('SELECT id, name, price, description FROM products ORDER BY id LIMIT 4')->fetchAll(PDO::FETCH_ASSOC);
+$products = $pdo->query('SELECT id, name, price, description, image_url FROM products ORDER BY id LIMIT 4')->fetchAll(PDO::FETCH_ASSOC);
 
 $imageMap = [
     1 => 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=900&q=80',
@@ -26,7 +27,7 @@ $imageMap = [
         <div class="grid">
             <?php foreach ($products as $product): ?>
                 <article class="card product-card">
-                    <?php $imagePath = $imageMap[(int) $product['id']] ?? ''; ?>
+                    <?php $imagePath = $product['image_url'] ?: ($imageMap[(int) $product['id']] ?? ''); ?>
                     <?php if ($imagePath !== ''): ?>
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
                     <?php endif; ?>
