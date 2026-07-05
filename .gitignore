@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# PHP
+vendor/
+composer.lock
+
+# OS
+.DS_Store
+
+# Node
+node_modules/
+
+# Misc
+*.log
