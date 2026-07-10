@@ -1,0 +1,9 @@
+/* Minimal styles for week4 demo */
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#111;margin:0;padding:20px}
+.container{max-width:900px;margin:0 auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+.form-box{max-width:480px;margin:20px auto;padding:18px;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+label{display:block;margin-bottom:12px}
+input,textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:4px}
+button{padding:10px 14px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer}
+.errors{background:#fee;border:1px solid #fbb;padding:8px;margin-bottom:12px}
+.message{background:#efe8ff;border:1px solid #d6c7ff;padding:8px;margin-bottom:12px}
