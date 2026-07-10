@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Week 3 — JS & PHP Basics</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Week 3 Exercises</h1>
+
+    <section>
+      <h2>Login Form (JS validation)</h2>
+      <form id="loginForm" action="php/process.php" method="post">
+        <label>Username<br><input name="username" id="username" required></label>
+        <label>Email<br><input name="email" id="email" type="email" required></label>
+        <label>Password<br><input name="password" id="password" type="password" required></label>
+        <div id="pw-strength" class="muted">Password strength: <span id="strength">-</span></div>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Live Text Preview</h2>
+      <label>Type text:<br><input id="live-input" placeholder="Type here..."></label>
+      <div class="preview" id="live-preview">Live preview will appear here</div>
+    </section>
+
+    <section>
+      <h2>Dynamic Menu</h2>
+      <button id="menu-toggle">Toggle Menu</button>
+      <nav id="menu" class="hidden">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section>
+      <h2>PHP Intro / DB Test</h2>
+      <p>Try the PHP examples:</p>
+      <ul>
+        <li><a href="php/index.php">PHP welcome & form</a></li>
+        <li><a href="php/db_test.php">DB connection test (MySQL example)</a></li>
+      </ul>
+    </section>
+  </main>
+  <script src="js/validation.js"></script>
+  <script src="js/dom.js"></script>
+</body>
+</html>
