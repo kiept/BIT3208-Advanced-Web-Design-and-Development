@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <!--
+    Configure a JNDI DataSource for Tomcat. Edit username/password/url as needed.
+    Place MySQL Connector/J jar in TOMCAT_HOME/lib or WEB-INF/lib.
+  -->
+  <Resource name="jdbc/studentdb" auth="Container" type="javax.sql.DataSource"
+            maxTotal="20" maxIdle="10" maxWaitMillis="10000"
+            username="root" password="password" driverClassName="com.mysql.cj.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/studentdb?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"/>
+</Context>
